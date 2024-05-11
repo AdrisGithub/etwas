@@ -1,0 +1,56 @@
+#!/bin/bash
+
+etwas_shell() {
+    yay --noconfirm -S "${@:2}" > /dev/null
+    clear
+    $SHELL
+    yay --noconfirm -Rns "${@:2}" > /dev/null
+    clear
+}
+
+etwas_build(){
+  yay --noconfirm -S "${@:3}" > /dev/null
+  clear
+  $2
+  yay --noconfirm -Rns "${@:3}" > /dev/null
+}
+
+print_help(){
+  bold=$(tput bold)
+  normal=$(tput sgr0)
+  echo "${bold}etwas${normal}
+It is the complete opposite of nix
+
+${bold}Correct usage:${normal} etwas <mode>
+mode:
+ ${bold}entwickeln:${normal} start a shell with the provided packages
+ ${bold}bauen:${normal} run a specific command and download packages
+ ${bold}hilfe:${normal} See this page or help to a specific mode
+
+${bold}-v:${normal} See the current version
+${bold}-h:${normal} See this page"
+}
+
+if [ "$1" = "bauen" ] || [ "$1" = "laufen" ];
+then
+    etwas_build "$@"
+elif [ "$1" = "entwickeln" ] || [ "$1" = "shell" ];
+then
+    etwas_shell "$@"
+elif [ "$1" = "-V" ];
+then
+    echo "1.0.0"
+elif [ "$1" = "hilfe" ];
+then
+    if [ "$2" = "bauen" ];
+    then
+        echo "etwas bauen \"script to execute\" <packages> "
+    elif [ "$2" = "entwickeln" ];
+    then
+      echo "etwas entwickeln <packages> "
+    else
+      print_help
+    fi
+else
+  print_help
+fi
